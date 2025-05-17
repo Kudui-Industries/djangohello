@@ -1,1 +1,1 @@
-web: guicorn djangohello.wsgi --bind 0.0.0.0:8000
+web: gunicorn djangohello.wsgi --bind 0.0.0.0:8000
