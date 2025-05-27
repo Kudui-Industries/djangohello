@@ -8,6 +8,13 @@ from hello.models import Task
 ENV = os.environ.get('ENV', 'dev')
 
 @csrf_exempt
+def index(request):
+    context = {
+        "title": "Index Page"
+
+    }
+    return render(request, "magazyn/index.html", context=context)
+
 def hello_world(request):
     try:
         # Spróbuj pobrać wszystkie zadania z bazy danych
@@ -54,3 +61,4 @@ def hello_world(request):
     <h2>Lista zadań:</h2>
     <p>{task_list if task_list else "Brak zadań"}</p>
     """)
+

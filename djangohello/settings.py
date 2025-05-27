@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.conf.global_settings import STATICFILES_DIRS, LOGIN_REDIRECT_URL
 
 ENV = os.environ.get('ENV', 'dev')
 
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap5',
+    'crispy_forms',
     'hello',
 
 ]
@@ -59,7 +62,7 @@ ROOT_URLCONF = 'djangohello.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [(os.path.join(BASE_DIR, "templejty"))],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,8 +136,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIR={
+    os.path.join(BASE_DIR, 'static')
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+#login urls
+LOGIN_REDIRECT_URL = "/ind"
+LOGIN_URL = "login"

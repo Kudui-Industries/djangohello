@@ -1,0 +1,9 @@
+body {
+    background-color: rgb(245,0,245 );
+    }
+content-selection{
+    background: afff;
+    margin: 40px;
+    padding: 1.5rem 1.5rem;
+    border-radius: 10px;
+}
