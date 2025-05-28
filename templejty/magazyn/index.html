@@ -1,4 +1,15 @@
 {% extends "../layout.html" %}
 {% block content %}
- <h2>tresc h2 z indexa</h2>
+{% if request.user.is_authenticated %}
+ <h2>homepage. tu ma być treść dostępna po zalogowaniu. tj  linki do</h2>
+ <h4>aktualnego stanu magazynowego</h4>
+ <h4>zakupów</h4>
+ <h4>propozycji posiłku</h4>
+ <h4>propozycji do zakupów</h4>
+ <h4>ustawienia planu</h4>
+ <h4>historii posiłków</h4>
+
+{% else %}
+ <h2>homepage. tu ma być treść dostępna bez logowania. tj zawartość bazy danych bez możliwosci wprowadzenia zmian</h2>
+{% endif %}
 {% endblock %}

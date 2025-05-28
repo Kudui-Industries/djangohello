@@ -1,8 +1,9 @@
 {% extends "../layout.html" %}
+{% load static %}
 {% block content %}
-<div>
-    <small>
-        Wylogowano <a href="#">Do strony głównej</a>
+<div class="content-section">
+    <small class="text-muted">
+        Wylogowano <a href="{% url 'index' %}">Do strony głównej</a>
     </small>
 </div>
 {% endblock %}
