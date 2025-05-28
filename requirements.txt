@@ -3,5 +3,3 @@ gunicorn==23.0.0
 pytest-django==4.11.1
 psycopg2-binary==2.9.10
 django-crispy-forms==2.4
-django-bootstrap5==25.1
-bootstrap4==0.1.0
