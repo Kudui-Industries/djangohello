@@ -12,9 +12,18 @@ class Task(models.Model):
 class Inventory(models.Model):
     name = models.CharField(max_length=100,null=False,blank=False)
     gitn = models.CharField(max_length=14)
+    counter = models.IntegerField(null=False, blank=False)
+    expiry_date_min = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class Item(models.Model):
+    name = models.CharField(max_length=100,null=False,blank=False)
+    gitn = models.CharField(max_length=14)
     location = models.CharField(max_length=200)
     buy_date = models.DateField(auto_now_add=True)
     expiry_date = models.DateField(auto_now=True)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name

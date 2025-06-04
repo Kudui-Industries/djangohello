@@ -1,9 +1,10 @@
 import os
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from hello.models import Task
+from hello.models import Inventory
 
 ENV = os.environ.get('ENV', 'dev')
 
@@ -62,3 +63,17 @@ def hello_world(request):
     <p>{task_list if task_list else "Brak zadań"}</p>
     """)
 
+def inventory_list(request):
+    inventories = Inventory.objects.all()
+    context = {
+        "title": "Inventory List",
+        "inventories": inventories
+    }
+    return render(request, "magazyn/inventory_list.html", context=context)
+
+def product_details_view(request,pk):
+    inventory = get_object_or_404(Inventory, pk=pk)
+    context={
+        'inventory': inventory
+    }
+    return render(request, "magazyn/product_details.html", context= context)
