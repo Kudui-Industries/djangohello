@@ -89,10 +89,6 @@ if ENV == 'prod':
             'PASSWORD': os.environ.get('RDS_PASSWORD', ''),
             'HOST': os.environ.get('RDS_HOSTNAME', 'localhost'),
             'PORT': os.environ.get('RDS_PORT', '5432'),
-        },
-        'auth_db': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 else:
@@ -103,7 +99,6 @@ else:
         }
     }
 
-DATABASE_ROUTERS = ['djangohello.db_routers.AuthRouter']
 
 
 # Password validation
