@@ -1,10 +1,13 @@
 import os
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from numpy.ma.core import less_equal
 
 from hello.models import Task
 from hello.models import Inventory
+from hello.models import Item
 
 ENV = os.environ.get('ENV', 'dev')
 
@@ -77,3 +80,25 @@ def product_details_view(request,pk):
         'inventory': inventory
     }
     return render(request, "magazyn/product_details.html", context= context)
+
+def item_list(request):
+    sort_by = request.GET.get('sort_by', 'name')  # Default to sorting by 'name':
+    sort_dir = request.GET.get('sort_direction', 'asc')  # Default to direction ascending
+    if sort_dir=="asc":
+        items = Item.objects.all().order_by(sort_by)
+    if sort_dir=="desc":
+        items = Item.objects.all().order_by("-"+sort_by)
+    return render(request, 'magazyn/item_list.html', {'items': items, 'sort_by': sort_by})
+
+def update_item_order(request):
+    if request.method == 'POST':
+        # Assuming the order is sent as a list of item IDs in the request
+        item_order = request.POST.getlist('item_order[]')
+
+        # Update the order of items in the database (you may need to add an order field)
+        for index, item_id in enumerate(item_order):
+            item = Item.objects.get(id=item_id)
+            item.order = index  # Assuming an 'order' field exists in your model
+            item.save()
+
+        return JsonResponse({'status': 'success'})

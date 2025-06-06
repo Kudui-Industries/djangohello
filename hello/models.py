@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from django.core.validators import MaxValueValidator
 from django.db import models
 
@@ -11,7 +13,7 @@ class Task(models.Model):
 
 class Inventory(models.Model):
     name = models.CharField(max_length=100,null=False,blank=False)
-    gitn = models.CharField(max_length=14)
+    gtin = models.CharField(max_length=14)
     counter = models.IntegerField(null=False, blank=False)
     expiry_date_min = models.DateField(auto_now=True)
 
@@ -20,10 +22,11 @@ class Inventory(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=100,null=False,blank=False)
-    gitn = models.CharField(max_length=14)
+    gtin = models.CharField(max_length=14)
     location = models.CharField(max_length=200)
-    buy_date = models.DateField(auto_now_add=True)
-    expiry_date = models.DateField(auto_now=True)
+    buy_date = models.DateField(default=datetime.today)
+    expiry_date = models.DateField(default=datetime.today)
+    order = models.IntegerField(default=0)  # Add this field
 
     def __str__(self):
         return self.name

@@ -1,0 +1,87 @@
+{% extends "../layout.html" %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortable Item List</title>
+
+    <!-- Add some basic styling for the table -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            cursor: pointer;
+            background-color: #f2f2f2;
+        }
+
+        th:hover {
+            background-color: #e2e2e2;
+        }
+
+        .active {
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Sortable List of Items</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th id="noclick">Nonclickable</th>
+            <th id="name" onclick="sortTable('name')">Name</th>
+            <th id="gtin" onclick="sortTable('gtin')">gtin</th>
+            <th id="expiry_date" onclick="sortTable('expiry_date')">expiry_date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.gtin }}</td>
+            <td>{{ item.expiry_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    // Function to handle sorting by column
+    function sortTable(column) {
+        // Get current URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Toggle the sorting direction if the same column is clicked
+        let sortDirection = urlParams.get('sort_direction')=== 'asc' ? 'desc': 'asc';
+        sortDirection = urlParams.get('sort_by') === column ? sortDirection : 'asc';
+
+        // Update URL with new sort column and direction
+        urlParams.set('sort_by', column);
+        urlParams.set('sort_direction', sortDirection);
+        window.location.search = urlParams.toString();
+    }
+
+    // Highlight active sorting column
+    const activeColumn = '{{ sort_by }}';
+    const activeHeader = document.getElementById(activeColumn);
+    if (activeHeader) {
+        activeHeader.classList.add('active');
+    }
+
+</script>
+
+</body>
+{% endblock %}
