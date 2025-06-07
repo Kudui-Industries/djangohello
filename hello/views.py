@@ -96,7 +96,7 @@ def gtin_inventory_list(request,pk):
         if sort_dir == "desc":
             ordering = "-" + sort_by
 
-    inventorys = Inventory.objects.filter(gtin=pk).order_by(ordering)
+    inventorys = Inventory.objects.filter(gtin__gtin=pk).order_by(ordering)
     context = {
         "title": "inventory List",
         'inventorys': inventorys
@@ -168,4 +168,10 @@ def add_inventory_item(request):
     else:
         form = AddToInventory()
     return render(request, 'magazyn/addinventory.html', {'form': form})
+
+def delete_inventory(request, uid):
+    if request.method == "POST":
+        inventory_item = get_object_or_404(Inventory, uid=uid)
+        inventory_item.delete()
+    return redirect('inventory_list')  # Adjust to your inventory list URL name
 

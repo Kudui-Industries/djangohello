@@ -7,6 +7,7 @@ from hello.views import gtin_inventory_list
 from hello.views import product_details_view
 from hello.views import upload_image
 from hello.views import add_inventory_item
+from hello.views import delete_inventory
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +25,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name= "magazyn/logout.html"), name="logout"),
     path('additem/', upload_image, name='upload_image'),
     path('addinv/', add_inventory_item, name='add_inventory_item'),
+    path('inventory/delete/<uuid:uid>/', delete_inventory, name='delete_inventory'),
 
 ]
 if settings.DEBUG:

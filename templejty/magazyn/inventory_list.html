@@ -44,6 +44,7 @@
             <th id="location" onclick="sortTable('location')">lokacja</th>
             <th id="buy_date" onclick="sortTable('buy_date')">kupione</th>
             <th id="expiry_date" onclick="sortTable('expiry_date')"> termin wazności</th>
+            <th>Usuń</th>  <!-- New header for Delete -->
         </tr>
     </thead>
     <tbody>
@@ -53,6 +54,12 @@
             <td>{{ inventory.location }}</td>
             <td>{{ inventory.buy_date }}</td>
             <td>{{ inventory.expiry_date }}</td>
+            <td>
+                <form action="{% url 'delete_inventory' inventory.uid %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" onclick="return confirm('Czy na pewno chcesz usunąć ten rekord?');">Usuń</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

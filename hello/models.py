@@ -53,7 +53,7 @@ class Inventory(models.Model):
     expiry_date = models.DateField(default=date(9999, 12, 31))
 
     def __str__(self):
-        return f"{self.name or ''} {self.location}"
+        return f"{self.name or ''} {self.location} ({self.gtin.gtin})"
 
     def get_name(self):
         if self.gtin:

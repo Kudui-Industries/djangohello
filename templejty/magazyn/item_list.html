@@ -57,10 +57,13 @@
             {% else %}
                 <p>No image</p>
             {% endif %}
-            <td>{{ item.name }}</td>
-            <td>{{ item.get_inventory_count_for_item }}</td>
-            <td>{{ item.earliest_expiry_date }}</td>
-        </tr>
+            <td>{{ item.name }}</td><td style="cursor:pointer;" onclick="window.location.href='{% url 'gtin_inventory_list' item.gtin %}'">
+        {{ item.get_inventory_count_for_item }}
+            </td>
+                <td style="cursor:pointer;" onclick="window.location.href='{% url 'gtin_inventory_list' item.gtin %}'">
+                    {{ item.earliest_expiry_date }}
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>
