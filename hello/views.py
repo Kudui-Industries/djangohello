@@ -5,9 +5,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from numpy.ma.core import less_equal
 
+from .forms import ImageUploadForm
+from .forms import AddToInventory
 from hello.models import Task
 from hello.models import Inventory
 from hello.models import Item
+from django.db.models import Min
+from django.db.models import Q
 
 ENV = os.environ.get('ENV', 'dev')
 
@@ -67,12 +71,37 @@ def hello_world(request):
     """)
 
 def inventory_list(request):
-    inventories = Inventory.objects.all()
+    inventorys = Inventory.objects.all()
+    sort_by = request.GET.get('sort_by', 'expiry_date')  # Default to sorting by 'expiry date':
+    sort_dir = request.GET.get('sort_direction', 'asc')  # Default to direction ascending
+    if sort_dir == "asc":
+        ordering = sort_by
+    else:
+        if sort_dir == "desc":
+            ordering = "-" + sort_by
+
+    inventorys = Inventory.objects.all().order_by(ordering)
     context = {
-        "title": "Inventory List",
-        "inventories": inventories
+        "title": "inventory List",
+        'inventorys': inventorys
     }
-    return render(request, "magazyn/inventory_list.html", context=context)
+    return render(request, 'magazyn/inventory_list.html', {'inventorys': inventorys, 'sort_by': sort_by})
+
+def gtin_inventory_list(request,pk):
+    sort_by = request.GET.get('sort_by', 'expiry_date')  # Default to sorting by 'expiry date':
+    sort_dir = request.GET.get('sort_direction', 'asc')  # Default to direction ascending
+    if sort_dir == "asc":
+        ordering = sort_by
+    else:
+        if sort_dir == "desc":
+            ordering = "-" + sort_by
+
+    inventorys = Inventory.objects.filter(gtin=pk).order_by(ordering)
+    context = {
+        "title": "inventory List",
+        'inventorys': inventorys
+    }
+    return render(request, 'magazyn/inventory_list.html', {'inventorys': inventorys, 'sort_by': sort_by})
 
 def product_details_view(request,pk):
     inventory = get_object_or_404(Inventory, pk=pk)
@@ -82,23 +111,61 @@ def product_details_view(request,pk):
     return render(request, "magazyn/product_details.html", context= context)
 
 def item_list(request):
+    items = Item.objects.all()
     sort_by = request.GET.get('sort_by', 'name')  # Default to sorting by 'name':
     sort_dir = request.GET.get('sort_direction', 'asc')  # Default to direction ascending
-    if sort_dir=="asc":
-        items = Item.objects.all().order_by(sort_by)
-    if sort_dir=="desc":
-        items = Item.objects.all().order_by("-"+sort_by)
+    if sort_dir == "asc":
+        ordering = sort_by
+    else:
+        if sort_dir == "desc":
+            ordering = "-" + sort_by
+
+    if sort_by == 'expiry_date':
+        # Filter out items with expiry_date == None or == 9999-12-31
+        items = Item.objects.exclude(Q(count=0)).order_by(ordering)
+    else:
+        items = Item.objects.all().order_by(ordering)
+    context = {
+        "title": "Item List",
+        'items': items
+    }
     return render(request, 'magazyn/item_list.html', {'items': items, 'sort_by': sort_by})
 
-def update_item_order(request):
+
+def upload_image(request):
     if request.method == 'POST':
-        # Assuming the order is sent as a list of item IDs in the request
-        item_order = request.POST.getlist('item_order[]')
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            action = request.POST.get('action')
+            if action == 'save_and_to_new':
+                return redirect('upload_image')  # adjust name as needed
+            else:
+                return redirect('item_list')
+    else:
+        form = ImageUploadForm()
+    return render(request, 'magazyn/additem.html', {'form': form})
 
-        # Update the order of items in the database (you may need to add an order field)
-        for index, item_id in enumerate(item_order):
-            item = Item.objects.get(id=item_id)
-            item.order = index  # Assuming an 'order' field exists in your model
-            item.save()
 
-        return JsonResponse({'status': 'success'})
+def item_inventory_count(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    count = Inventory.objects.filter(gtin=item.gtin).count()
+    return render(request, 'item_inventory.html', {
+        'item': item,
+        'inventory_count': count
+    })
+
+def add_inventory_item(request):
+    if request.method == 'POST':
+        form = AddToInventory(request.POST)
+        if form.is_valid():
+            form.save()
+            action = request.POST.get('action')
+            if action == 'save_and_to_new':
+                return redirect('add_inventory_item')  # adjust name as needed
+            else:
+                return redirect('inventory_list')
+    else:
+        form = AddToInventory()
+    return render(request, 'magazyn/addinventory.html', {'form': form})
+

@@ -1,0 +1,40 @@
+<!--templejty/magazyn/addinventory.html-->
+{% extends "../layout.html" %}
+{% block content %}
+
+<html>
+<head>
+    <title>Dodaj produkt do magazynu</title>
+</head>
+{% if request.user.is_authenticated %}
+    <body>
+        <h1>Dodaj produkt do magazynu</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>{{ form.gtin.label_tag }}</th>
+                    <td>{{ form.gtin }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.location.label_tag }}</th>
+                    <td>{{ form.location }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.buy_date.label_tag }}</th>
+                    <td>{{ form.buy_date }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.expiry_date.label_tag }}</th>
+                    <td>{{ form.expiry_date }}</td>
+                </tr>
+                <tr>
+                    <th><button type="submit" name="action" value="save_and_to_list">Dodaj</button></th>
+                    <td><button type="submit" name="action" value="save_and_to_new">Dodaj i przejdź do nowego</button></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+{% endif %}
+</html>
+{% endblock %}

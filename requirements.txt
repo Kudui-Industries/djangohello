@@ -6,3 +6,4 @@ django-crispy-forms==2.4
 django-bootstrap5==24.3
 opencv-python==4.11.0.86
 pyzbar==0.1.9
+pillow==10.4.0

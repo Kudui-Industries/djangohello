@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sortable Item List</title>
+    <title>Lista produktów</title>
 
     <!-- Add some basic styling for the table -->
     <style>
@@ -35,24 +35,31 @@
 </head>
 <body>
 
-<h1>Sortable List of Items</h1>
+<h1>Lista produktów</h1>
 
 <table>
     <thead>
         <tr>
-            <th id="noclick">Nonclickable</th>
-            <th id="name" onclick="sortTable('name')">Name</th>
-            <th id="gtin" onclick="sortTable('gtin')">gtin</th>
-            <th id="expiry_date" onclick="sortTable('expiry_date')">expiry_date</th>
+            <th id="noclick">zdjęcie</th>
+            <th id="name" onclick="sortTable('name')">nazwa</th>
+            <th id="count" onclick="sortTable('count')">na stanie</th>
+            <th id="expiry_date" onclick="sortTable('expiry_date')">najbliższy termin wazności</th>
         </tr>
     </thead>
     <tbody>
         {% for item in items %}
         <tr>
+            <td>{% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" width="100">
+            {% elif item.imageurl %}
+                <!-- Fallback to web-based URL if image is not uploaded -->
+                <img src="{{ item.imageurl }}" alt="{{ item.name }}" width="100">
+            {% else %}
+                <p>No image</p>
+            {% endif %}
             <td>{{ item.name }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.gtin }}</td>
-            <td>{{ item.expiry_date }}</td>
+            <td>{{ item.get_inventory_count_for_item }}</td>
+            <td>{{ item.earliest_expiry_date }}</td>
         </tr>
         {% endfor %}
     </tbody>

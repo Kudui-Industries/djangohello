@@ -1,0 +1,41 @@
+<!--templejty/magazyn/additem.html-->
+{% extends "../layout.html" %}
+{% block content %}
+
+<html>
+<head>
+    <title>Dodaj produkt</title>
+</head>
+
+{% if request.user.is_authenticated %}
+    <body>
+        <h1>Dodaj nowy produkt</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>{{ form.name.label_tag }}</th>
+                    <td>{{ form.name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.gtin.label_tag }}</th>
+                    <td>{{ form.gtin }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.image.label_tag }}</th>
+                    <td>{{ form.image }}</td>
+                </tr>
+                <tr>
+                    <th>{{ form.imageurl.label_tag }}</th>
+                    <td>{{ form.imageurl }}</td>
+                </tr>
+                <tr>
+                    <th><button type="submit" name="action" value="save_and_to_list">Dodaj</button></th>
+                    <td><button type="submit" name="action" value="save_and_to_new">Dodaj i przejdź do nowego</button></td>
+                </tr>
+            </table>
+        </form>
+    </body>
+{% endif %}
+</html>
+{% endblock %}
